@@ -35,10 +35,7 @@ class PhoneNumberCrawler {
 	}
 	public function getPhoneNumber() {
 
-		$apiEndPoint = "http://www.foody.vn/Restaurant/GetPhoneByResId?resId={$this->post->id}";
-		$res           = $this->httpClient->get( $apiEndPoint );
-		$responseText = $res->getBody()->getContents();
-		$response = json_decode($responseText);
+
 		return $response->phone;
 	}
 
@@ -51,6 +48,12 @@ class PhoneNumberCrawler {
 
 		$reviewDom = $parsed_content->filterXPath('//*[@id="draf-review-load"]');
 		$post->id = $reviewDom->attr('resid');
+
+		$apiEndPoint = "http://www.foody.vn/Restaurant/GetPhoneByResId?resId={$this->post->id}";
+		$res           = $this->httpClient->get( $apiEndPoint );
+		$responseText = $res->getBody()->getContents();
+		$response = json_decode($responseText);
+		$post->phone = $response->phone;
 
 		$titleDom = $parsed_content->filterXPath('//div[contains(@class, "main-info-title")]/h1');
 		$post->title = $titleDom->text();
